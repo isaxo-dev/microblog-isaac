@@ -23,7 +23,7 @@ class Usuario {
     }
 
     private function setNome(string $valorNome):void {
-        $this->nome = $valorNome
+        $this->nome = $valorNome;
     }
 
     private function setEmail(string $valorEmail):void {
