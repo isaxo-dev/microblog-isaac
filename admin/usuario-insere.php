@@ -1,5 +1,6 @@
 <?php 
 require_once "../src/Models/Usuario.php";
+require_once "../src/Helpers/Utils.php";
 
 // Variável que será usada para montar mensagens de erro personaliadas
 $erro = null;
@@ -13,7 +14,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 	){
 		$erro = "Preencha todos os campos";
 	} else {
+		// Capturando e sanitizando os valores do formulário
+		$nome = Utils::sanitizar($_POST['nome']);
+		$email = Utils::sanitizar($_POST['email'], 'email');
+		$tipo = Utils::sanitizar($_POST['tipo']);
 
+		// apturando e codificando (gerando um hash) da senha
+		$senha = Utils::codificarSenha($_POST['senha']);
+
+		// Criando um objeto para um novo usuário com seus dados
+		$novoUsuario = new Usuario ($nome, $email, $senha, $tipo);
+
+		// Teste seu método dump AQUI passando o objeto $novoUsuario
+		Utils::dump($novoUsuario);
 	}
 
 }
@@ -40,22 +53,22 @@ require_once "../includes/cabecalho-admin.php";
 
 			<div class="mb-3">
 				<label class="form-label" for="nome">Nome:</label>
-				<input value="<?=$_POST['nome'] ?? ''?>" class="form-control" type="text" id="nome" name="nome">
+				<input required value="<?=$_POST['nome'] ?? ''?>" class="form-control" type="text" id="nome" name="nome">
 			</div>
 
 			<div class="mb-3">
 				<label class="form-label" for="email">E-mail:</label>
-				<input value="<?=$_POST['email'] ?? ''?>" class="form-control" type="email" id="email" name="email">
+				<input required value="<?=$_POST['email'] ?? ''?>" class="form-control" type="email" id="email" name="email">
 			</div>
 
 			<div class="mb-3">
 				<label class="form-label" for="senha">Senha:</label>
-				<input class="form-control" type="password" id="senha" name="senha">
+				<input required class="form-control" type="password" id="senha" name="senha">
 			</div>
 
 			<div class="mb-3">
 				<label class="form-label" for="tipo">Tipo:</label>
-				<select class="form-select" name="tipo" id="tipo">
+				<select required class="form-select" name="tipo" id="tipo">
 					<option value=""></option>
 					<option value="editor">Editor</option>
 					<option value="admin">Administrador</option>
